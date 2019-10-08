@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>promis测试</title>
+</head>
+<body>
+    
+
+
+    <script>
+    function Kpromise(fn){
+        this.status="pending";
+        this.sucessList=[];
+        this.failList=[];
+        var _this=this;
+        this.getStatus=function(){console.log(this.status)};
+        this.then=function (sucess,fail){
+            if(typeof sucess == 'function'){
+                console.log("push sssssssssssss")
+                this.sucessList.push(sucess)
+            }
+            if(typeof fail == 'function'){
+                this.failList.push(fail)
+                console.log("push ffffffffffff")
+            }
+        }
+        var resolved = function(){
+            console.log("fulfilled sssssssssssss")
+            if(_this.status == "pending"){
+                console.log("fulfilled sssssssssssss")
+                _this.status = "fulfilled"
+                _this.sucessList.forEach(element => {
+                    element()
+                });
+            }
+        };
+        var rejected= function(){
+            console.log("rejected sssssssssssss")
+            if(_this.status == "pending"){
+                console.log("rejected sssssssssssss")
+                _this.status = "rejected"
+                _this.failList.forEach(element => {
+                    element()
+                });
+            }}
+        fn(resolved,rejected)
+    }
+    let promise = new Kpromise(function(a,b){
+        setTimeout(()=>{
+        var num = Math.random()*2
+        if(num<1)
+            a()
+        else
+            b()
+
+        },1000)
+    })
+    promise.then(()=>{console.log("qssssssssssss")},()=>{console.log("fffffffffffffffffffffffff")})
+    promise.then(()=>{console.log("111111111")},()=>{console.log("333333333333")})
+    promise.then(()=>{console.log("222222222222")},()=>{console.log("4444444444444")})
+    </script>
+</body>
+</html>
